@@ -1,0 +1,75 @@
+#include "stdio.h"
+#include "math.h"
+
+
+int softCmp(float a, float b, float eps);
+int fixedEps(float a, float b, float eps);
+int dynamicEps(float a, float b, float eps);
+
+
+int main(void) {
+float a, b;
+a = 100.0f;
+b = 0.0f;
+float eps = 0;
+
+
+int softCmpEq, softCmpNEq, fixedCmpEpsEq, fixedCmpEpsNEq, dynCmpEpsEq, dynCmpEpsNEq;
+softCmpEq = 0, softCmpNEq = 0, fixedCmpEpsEq = 0, fixedCmpEpsNEq = 0, dynCmpEpsEq = 0, dynCmpEpsNEq = 0;
+
+for(int i = 0; i < 1000; i++) {
+    b+=0.1f;
+}
+
+int n = 1000;
+
+
+while(1) {
+
+    printf("Enter Epsilon: ");
+    scanf("%f", &eps);
+
+
+    while ( n > 0) {
+        if(softCmp(a, b, eps)) {
+        softCmpEq++;
+        } else {
+        softCmpNEq++;
+        }
+
+        if (fixedEps(a, b, eps)) {
+        fixedCmpEpsEq++;
+        } else {
+        fixedCmpEpsNEq++;
+        }
+
+        if(dynamicEps(a, b, eps)) {
+        dynCmpEpsEq++;
+        } else {
+        dynCmpEpsNEq++;
+        }
+        n--;
+    }
+
+        printf("\t\t\t\tResults with the entered epsilon of %f and without epsilon are as follows: \t\t\t\t\n", eps);
+        printf("1 - Number of Successful compares without epsilon: %d;\n1 - Number of unsuccessful compares without epsilon: %d;\n", softCmpEq, softCmpNEq);
+        printf("2 - Number of Successful compares with fixed epsilon: %d;\n2 - Number of unsuccessful compares fixed epsilon: %d;\n", fixedCmpEpsEq, fixedCmpEpsNEq);
+        printf("3 - Number of Successful compares with dynamic epsilon: %d;\n3 - Number of unsuccessful compares dynamic epsilon: %d;\n", dynCmpEpsEq, dynCmpEpsNEq);
+    }
+
+
+return 0;
+}
+
+int softCmp(float a, float b, float eps) {
+    return a == b;
+}
+int fixedEps(float a, float b, float eps ) {
+    return fabs(a - b) < eps;
+}
+int dynamicEps(float a, float b, float eps) {
+    return fabs(a - b) < eps*fmax(fabs(a), fabs(b));
+}
+
+
+
